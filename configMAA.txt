@@ -1,0 +1,76 @@
+# Physical and mathematical values file. 
+# Note that there must not be any space between the word and '=' and must be at least one space between '=' and the number
+
+# mode of verbosity and config file name
+dumpMode= 1
+filePrefix= MAAinv200
+
+newFile_step= 1000000 #number of intervals for creating new file
+sync_step= 1000000 #number of intervals for sync. with disk
+
+r_step1= 200 #dump the data every step in Km for the first IO config
+t_step1= 300000. #dump the data every step in sec. for the first IO config
+itr_step1= 3000000 #dump the data after this many iterations for the first IO config
+
+r_step2= .5 #dump the data every step in Km for the second IO config
+t_step2= 30000. #dump the data every step in sec. for the second IO config
+itr_step2= 3000000 #dump the data after this many iterations for the second IO config
+
+# negative number means the start and end should be find with benchmarking
+start_beam= -1 #each node should have different starting point
+end_beam= -1 #shall not be more than the total number of Abins
+
+# indicates whether or not we are doing a multi-node benchmark
+multiNodeBench= 0
+minNodes= 8
+maxNodes= 12
+
+# indicates whether or not the matter profile is included
+hasMatter= 1
+
+#error threshold
+eps0= 1.E-8
+ksi= .94
+
+mu= 20
+
+dm2= -3E-3 #eV2
+theta= 0.1
+
+Tn= 10000000 #Max. total time in sec. of exe.
+Ts= 30000000 #Max. total number of steps in exe.
+R0= 50 #Km
+Rn= 250 #Km
+dr= .001 #Km
+max_dr= .1 #Km
+E0= 0 #MeV
+E1= 80 #Mev
+
+SPoints= 1
+Abins= 800
+Pbins= 200
+Ebins= 160
+Flvs= 2
+
+Ye= 0.4
+nb0= 1.63E+36 # cm^-3
+Rv= 11.	#Km
+Mns= 1.4 # In solar mass
+gs= 5.5
+S= 140.
+hNS= 0.18 #Km
+
+Lve=  1E+51 #erg/s
+Lv_e= 1E+51 #erg/s
+Lvt=  1E+51 #1E+54 #erg/s
+Lv_t= 1E+51 #1E+54 #erg/s
+
+Tve=  2.76 #MeV
+Tv_e= 4.01 #MeV
+Tvt=  6.26 #MeV
+Tv_t= 6.26 #MeV
+
+eta_ve=  3
+eta_v_e= 3
+eta_vt=  3
+eta_v_t= 3

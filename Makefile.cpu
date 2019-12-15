@@ -1,0 +1,81 @@
+CXX = CC  #mpicxx #icpc
+CXXFLAGS = -O3 -openmp -DIOF -DMA -DSIMD -DOMP -DMMPI
+VEC = -xHost -qopt-report=3
+INC = -I"./include"
+LIBS = -lnetcdf
+
+CPP_SRCS += \
+./src/Fenergy.cpp \
+./src/IO_f.cpp \
+./src/IO_fi.cpp \
+./src/Matt.cpp \
+./src/NBGroup.cpp \
+./src/NBeam.cpp \
+./src/Nmr.cpp \
+./src/Parser.cpp \
+./src/Phy_MA.cpp \
+./src/Phy_MAA.cpp \
+./src/Phy_PLN.cpp \
+./src/Phy_CLN.cpp \
+./src/Phy_SA.cpp \
+./src/Util.cpp \
+./src/main.cpp 
+
+OBJS += \
+./objC/Fenergy.o \
+./objC/IO_f.o \
+./objC/IO_fi.o \
+./objC/Matt.o \
+./objC/NBGroup.o \
+./objC/NBeam.o \
+./objC/Nmr.o \
+./objC/Parser.o \
+./objC/Phy_MA.o \
+./objC/Phy_MAA.o \
+./objC/Phy_PLN.o \
+./objC/Phy_CLN.o \
+./objC/Phy_SA.o \
+./objC/Util.o \
+./objC/main.o 
+
+CPP_DEPS += \
+./objC/Fenergy.d \
+./objC/IO_f.d \
+./objC/IO_fi.d \
+./objC/Matt.d \
+./objC/NBGroup.d \
+./objC/NBeam.d \
+./objC/Nmr.d \
+./objC/Parser.d \
+./objC/Phy_MA.d \
+./objC/Phy_MAA.d \
+./objC/Phy_PLN.d \
+./objC/Phy_CLN.d \
+./objC/Phy_SA.d \
+./objC/Util.d \
+./objC/main.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+objC/%.o: ./src/%.cpp
+	mkdir -p objC
+	@echo 'Building file: $<'
+	$(CXX) $(INC) $(CXXFLAGS) $(VEC) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+# Tool invocations
+XFLAT: $(OBJS)
+	@echo 'Building target: $@'
+	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o "XFLAT.cpu"
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+.PHONY: clean
+
+clean:
+	rm -rf ./objC/*.d HPC_Flat
+	rm -rf ./objC/*.o HPC_Flat
+
+# All Target
+all: clean XFLAT

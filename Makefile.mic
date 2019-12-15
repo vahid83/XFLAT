@@ -1,0 +1,83 @@
+CXX = CC
+CXXFLAGS = -O3 -qopenmp -DIOF -DMAA -DSIMD -DOMP -DMMPI
+VEC = -qopt-report=3 #-axAVX -xAVX
+MIC = -xMIC-AVX512 -hcpu=mic-knl #-mmic
+INC =  -I"./include"
+LIBS = -lnetcdf #-L"/usr/local/mic/lib" -lnetcdf #-lhdf5_hl -lhdf5 -lz
+
+CPP_SRCS += \
+./src/Fenergy.cpp \
+./src/IO_f.cpp \
+./src/IO_fi.cpp \
+./src/Matt.cpp \
+./src/NBGroup.cpp \
+./src/NBeam.cpp \
+./src/Nmr.cpp \
+./src/Parser.cpp \
+./src/Phy_MA.cpp \
+./src/Phy_MAA.cpp \
+./src/Phy_PLN.cpp \
+./src/Phy_CLN.cpp \
+./src/Phy_SA.cpp \
+./src/Util.cpp \
+./src/main.cpp 
+
+OBJS += \
+./objM/Fenergy.o \
+./objM/IO_f.o \
+./objM/IO_fi.o \
+./objM/Matt.o \
+./objM/NBGroup.o \
+./objM/NBeam.o \
+./objM/Nmr.o \
+./objM/Parser.o \
+./objM/Phy_MA.o \
+./objM/Phy_MAA.o \
+./objM/Phy_PLN.o \
+./objM/Phy_CLN.o \
+./objM/Phy_SA.o \
+./objM/Util.o \
+./objM/main.o 
+
+CPP_DEPS += \
+./objM/Fenergy.d \
+./objM/IO_f.d \
+./objM/IO_fi.d \
+./objM/Matt.d \
+./objM/NBGroup.d \
+./objM/NBeam.d \
+./objM/Nmr.d \
+./objM/Parser.d \
+./objM/Phy_MA.d \
+./objM/Phy_MAA.d \
+./objM/Phy_PLN.d \
+./objM/Phy_CLN.d \
+./objM/Phy_SA.d \
+./objM/Util.d \
+./objM/main.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+objM/%.o: ./src/%.cpp
+	mkdir -p objM
+	@echo 'Building file: $<'
+	$(CXX) $(MIC) $(INC) $(CXXFLAGS) $(VEC) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+
+# Tool invocations
+XFLAT: $(OBJS)
+	@echo 'Building target: $@'
+	$(CXX) $(MIC) $(CXXFLAGS) $(OBJS) $(LIBS) -o "XFLAT.mic"
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+.PHONY: clean
+
+clean:
+	rm -rf ./objM/*.d HPC_Flat
+	rm -rf ./objM/*.o HPC_Flat
+
+# All Target
+all: clean XFLAT
